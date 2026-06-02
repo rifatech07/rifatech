@@ -4,6 +4,7 @@
     let rifaConfig = {
         whatsapp: '5531982635834',
         premio: 'Caixa de Som JBL',
+        valor_cota: 'R$ 10,00',
         data_sorteio: '30/06/2026'
     };
     const STORAGE_RESERVAS = 'rifa-minhas-reservas';
@@ -150,7 +151,8 @@
             msg += '👤 Nome: ' + nome + '\n';
         }
         msg +=
-            '🎟️ Números: ' + cotaData.numero1 + ' · ' + cotaData.numero2 + ' · ' + cotaData.numero3 + '\n\n' +
+            '🎟️ Números: ' + cotaData.numero1 + ' · ' + cotaData.numero2 + ' · ' + cotaData.numero3 + '\n' +
+            '💰 Valor: ' + (rifaConfig.valor_cota || '—') + '\n\n' +
             'Gostaria de enviar o comprovante de pagamento (PIX). Aguardo confirmação!';
         return 'https://wa.me/' + String(rifaConfig.whatsapp || '').replace(/\D/g, '') + '?text=' + encodeURIComponent(msg);
     }

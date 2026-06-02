@@ -1,16 +1,24 @@
--- Configurações da rifa (WhatsApp, prêmio, data) — rode no SQL Editor
+-- Configurações da rifa — rode no SQL Editor (pode rodar de novo)
 
 CREATE TABLE IF NOT EXISTS rifa_config (
   id INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
   whatsapp TEXT NOT NULL DEFAULT '5531982635834',
   premio TEXT NOT NULL DEFAULT 'Caixa de Som JBL',
+  valor_cota TEXT NOT NULL DEFAULT 'R$ 10,00',
   data_sorteio TEXT NOT NULL DEFAULT '30/06/2026',
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-INSERT INTO rifa_config (id, whatsapp, premio, data_sorteio)
-VALUES (1, '5531982635834', 'Caixa de Som JBL', '30/06/2026')
+ALTER TABLE rifa_config
+  ADD COLUMN IF NOT EXISTS valor_cota TEXT NOT NULL DEFAULT 'R$ 10,00';
+
+INSERT INTO rifa_config (id, whatsapp, premio, valor_cota, data_sorteio)
+VALUES (1, '5531982635834', 'Caixa de Som JBL', 'R$ 10,00', '30/06/2026')
 ON CONFLICT (id) DO NOTHING;
+
+UPDATE rifa_config
+SET valor_cota = 'R$ 10,00'
+WHERE id = 1 AND (valor_cota IS NULL OR valor_cota = '');
 
 ALTER TABLE rifa_config ENABLE ROW LEVEL SECURITY;
 

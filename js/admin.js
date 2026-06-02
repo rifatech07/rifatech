@@ -63,6 +63,7 @@
     const formRifaConfig = document.getElementById('form-rifa-config');
     const cfgWhatsapp = document.getElementById('cfg-whatsapp');
     const cfgPremio = document.getElementById('cfg-premio');
+    const cfgValorCota = document.getElementById('cfg-valor-cota');
     const cfgDataSorteio = document.getElementById('cfg-data-sorteio');
     const cfgError = document.getElementById('cfg-error');
     const btnSettingsToggle = document.getElementById('btn-settings-toggle');
@@ -371,11 +372,13 @@
         return RifaAPI.fetchRifaConfig().then(function (cfg) {
             cfgWhatsapp.value = cfg.whatsapp || '';
             cfgPremio.value = cfg.premio || '';
+            cfgValorCota.value = cfg.valor_cota || '';
             cfgDataSorteio.value = cfg.data_sorteio || '';
         }).catch(function () {
             var d = RifaAPI.configDefaults || {};
             cfgWhatsapp.value = d.whatsapp || '';
             cfgPremio.value = d.premio || '';
+            cfgValorCota.value = d.valor_cota || '';
             cfgDataSorteio.value = d.data_sorteio || '';
         });
     }
@@ -386,6 +389,7 @@
         RifaAPI.updateRifaConfig({
             whatsapp: cfgWhatsapp.value.trim(),
             premio: cfgPremio.value.trim(),
+            valor_cota: cfgValorCota.value.trim(),
             data_sorteio: cfgDataSorteio.value.trim()
         }).then(function (result) {
             if (!result.ok) {

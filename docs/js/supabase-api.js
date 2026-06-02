@@ -48,6 +48,7 @@
     var CONFIG_DEFAULTS = {
         whatsapp: '5531982635834',
         premio: 'Caixa de Som JBL',
+        valor_cota: 'R$ 10,00',
         data_sorteio: '30/06/2026'
     };
 
@@ -55,6 +56,7 @@
         return {
             whatsapp: (row && row.whatsapp) || CONFIG_DEFAULTS.whatsapp,
             premio: (row && row.premio) || CONFIG_DEFAULTS.premio,
+            valor_cota: (row && row.valor_cota) || CONFIG_DEFAULTS.valor_cota,
             data_sorteio: (row && row.data_sorteio) || CONFIG_DEFAULTS.data_sorteio
         };
     }
@@ -66,7 +68,7 @@
         fetchRifaConfig: function () {
             return getClient()
                 .from('rifa_config')
-                .select('whatsapp,premio,data_sorteio')
+                .select('whatsapp,premio,valor_cota,data_sorteio')
                 .eq('id', 1)
                 .maybeSingle()
                 .then(function (res) {
@@ -84,9 +86,13 @@
                 return Promise.resolve({ ok: false, erro: 'WhatsApp inválido. Use DDI + DDD + número.' });
             }
             var premio = String(payload.premio || '').trim();
+            var valorCota = String(payload.valor_cota || payload.valorCota || '').trim();
             var dataSorteio = String(payload.data_sorteio || payload.dataSorteio || '').trim();
             if (premio.length < 2) {
                 return Promise.resolve({ ok: false, erro: 'Informe o prêmio.' });
+            }
+            if (valorCota.length < 1) {
+                return Promise.resolve({ ok: false, erro: 'Informe o valor da cota.' });
             }
             if (dataSorteio.length < 4) {
                 return Promise.resolve({ ok: false, erro: 'Informe a data do sorteio.' });
@@ -96,11 +102,12 @@
                 .update({
                     whatsapp: whatsapp,
                     premio: premio,
+                    valor_cota: valorCota,
                     data_sorteio: dataSorteio,
                     updated_at: new Date().toISOString()
                 })
                 .eq('id', 1)
-                .select('whatsapp,premio,data_sorteio')
+                .select('whatsapp,premio,valor_cota,data_sorteio')
                 .single()
                 .then(function (res) {
                     if (res.error) return { ok: false, erro: res.error.message };

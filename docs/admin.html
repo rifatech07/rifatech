@@ -73,7 +73,7 @@
             <div class="admin-settings__head">
                 <div>
                     <h2>Configurações da rifa</h2>
-                    <p class="admin-settings__sub">WhatsApp, prêmio e data do sorteio (aparecem na página do comprador)</p>
+                    <p class="admin-settings__sub">WhatsApp, prêmio, valor da cota e data do sorteio</p>
                 </div>
                 <button type="button" id="btn-settings-toggle" class="btn btn--ghost btn--sm" aria-expanded="true">Ocultar</button>
             </div>
@@ -87,6 +87,10 @@
                     <div class="field">
                         <label for="cfg-premio">Prêmio / o que está sendo rifado</label>
                         <input type="text" id="cfg-premio" required maxlength="120" placeholder="Caixa de Som JBL">
+                    </div>
+                    <div class="field">
+                        <label for="cfg-valor-cota">Valor da cota</label>
+                        <input type="text" id="cfg-valor-cota" required maxlength="30" placeholder="R$ 10,00">
                     </div>
                     <div class="field">
                         <label for="cfg-data-sorteio">Data do sorteio</label>
