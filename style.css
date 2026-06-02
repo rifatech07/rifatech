@@ -247,6 +247,18 @@ a.btn {
     justify-content: center;
 }
 
+.btn--icon .icon-help {
+    flex-shrink: 0;
+}
+
+.icon-help__mark {
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    fill: currentColor;
+    stroke: none;
+}
+
 .icon-moon { display: none; }
 [data-theme="dark"] .icon-sun { display: none; }
 [data-theme="dark"] .icon-moon { display: block; }
@@ -365,8 +377,8 @@ a.btn {
     font-size: 0.8125rem;
     padding: 1px 6px;
     border-radius: 4px;
-    background: var(--surface-2);
-    border: 1px solid var(--border-light);
+    background: var(--surface);
+    border: 1px solid var(--border);
 }
 
 .modal__actions .btn--whatsapp {
@@ -1087,7 +1099,7 @@ a.btn {
     }
 }
 
-/* ── Modal de reserva ── */
+/* ── Modais (mesmo tema: surface, shadow, header slate) ── */
 body.modal-open {
     overflow: hidden;
 }
@@ -1095,13 +1107,13 @@ body.modal-open {
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.55);
+    background: rgba(15, 23, 42, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 200;
     padding: 16px;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(4px);
 }
 
 .modal-overlay[hidden] {
@@ -1112,10 +1124,103 @@ body.modal-open {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+    box-shadow: var(--shadow), 0 12px 40px rgba(15, 23, 42, 0.12);
     width: 100%;
     max-width: 420px;
     animation: modalIn 0.2s ease;
+    overflow: hidden;
+}
+
+.modal::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), #6366f1);
+}
+
+.modal--success::before {
+    background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+
+.modal--danger::before {
+    background: linear-gradient(90deg, #dc2626, #f87171);
+}
+
+.modal--faq {
+    max-width: 32rem;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal--faq .modal__body {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+.faq-intro {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0 0 14px;
+    line-height: 1.5;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.faq-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0 12px;
+    background: var(--surface-2);
+}
+
+.faq-item summary {
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 12px 4px 12px 0;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary::after {
+    content: '+';
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.faq-item[open] summary::after {
+    content: '−';
+}
+
+.faq-item__body {
+    padding: 0 4px 12px;
+}
+
+.faq-item__body p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+.faq-item__body strong {
+    color: var(--text);
+    font-weight: 600;
 }
 
 @keyframes modalIn {
@@ -1123,27 +1228,47 @@ body.modal-open {
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.modal__header {
+.modal__header,
+.modal__header--danger {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-light);
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--header-bg);
+    border-bottom: none;
 }
 
-.modal__header h2 {
+.modal__header h2,
+.modal__header--danger h2 {
     font-size: 1.05rem;
     font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--header-text);
 }
 
+.modal__header .btn--icon,
+.modal__header--danger .btn--icon,
 .modal__close {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     line-height: 1;
-    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--header-text);
+    flex-shrink: 0;
+}
+
+.modal__header .btn--icon:hover,
+.modal__header--danger .btn--icon:hover,
+.modal__close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
 }
 
 .modal__body {
     padding: 20px;
+    background: var(--surface);
 }
 
 .modal__hint {
@@ -1151,6 +1276,15 @@ body.modal-open {
     color: var(--text-muted);
     margin-bottom: 16px;
     line-height: 1.5;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+}
+
+.modal__hint strong {
+    color: var(--text);
+    font-weight: 600;
 }
 
 .field {
@@ -1172,9 +1306,10 @@ body.modal-open {
     font-size: 0.875rem;
     padding: 10px 12px;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--surface-2);
+    border-radius: var(--radius);
+    background: var(--surface);
     color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .field input:focus,
@@ -1210,7 +1345,11 @@ body.modal-open {
     display: flex;
     gap: 8px;
     justify-content: flex-end;
-    margin-top: 4px;
+    flex-wrap: wrap;
+    margin: 16px -20px -20px;
+    padding: 14px 20px;
+    background: var(--surface-2);
+    border-top: 1px solid var(--border-light);
 }
 
 .modal__actions .btn--primary {
@@ -1231,8 +1370,15 @@ body.modal-open {
 }
 
 .modal--success .modal__header {
-    border-bottom: none;
-    padding-bottom: 0;
+    padding-bottom: 14px;
+}
+
+.modal--success .modal__body {
+    padding-top: 16px;
+}
+
+.modal--success .modal__body > .btn--ghost.btn--block {
+    margin-top: 4px;
 }
 
 .sucesso-msg {
