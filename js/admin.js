@@ -60,6 +60,14 @@
     const resetConfirmBtn = document.getElementById('reset-confirm-btn');
     const resetCancel = document.getElementById('reset-cancel');
 
+    const formRifaConfig = document.getElementById('form-rifa-config');
+    const cfgWhatsapp = document.getElementById('cfg-whatsapp');
+    const cfgPremio = document.getElementById('cfg-premio');
+    const cfgDataSorteio = document.getElementById('cfg-data-sorteio');
+    const cfgError = document.getElementById('cfg-error');
+    const btnSettingsToggle = document.getElementById('btn-settings-toggle');
+    const adminSettings = document.getElementById('admin-settings');
+
     function gerarIdentificadorLocal() {
         var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         var id = 'RF-';
@@ -358,6 +366,40 @@
         bindAdminRowActions(tbody);
     }
 
+    function loadRifaConfigAdmin() {
+        if (!formRifaConfig) return Promise.resolve();
+        return RifaAPI.fetchRifaConfig().then(function (cfg) {
+            cfgWhatsapp.value = cfg.whatsapp || '';
+            cfgPremio.value = cfg.premio || '';
+            cfgDataSorteio.value = cfg.data_sorteio || '';
+        }).catch(function () {
+            var d = RifaAPI.configDefaults || {};
+            cfgWhatsapp.value = d.whatsapp || '';
+            cfgPremio.value = d.premio || '';
+            cfgDataSorteio.value = d.data_sorteio || '';
+        });
+    }
+
+    function saveRifaConfig(e) {
+        e.preventDefault();
+        cfgError.hidden = true;
+        RifaAPI.updateRifaConfig({
+            whatsapp: cfgWhatsapp.value.trim(),
+            premio: cfgPremio.value.trim(),
+            data_sorteio: cfgDataSorteio.value.trim()
+        }).then(function (result) {
+            if (!result.ok) {
+                cfgError.textContent = result.erro || 'Erro ao salvar.';
+                cfgError.hidden = false;
+                return;
+            }
+            showToast('Configurações salvas!');
+        }).catch(function (err) {
+            cfgError.textContent = (err && err.message) || 'Erro ao salvar configurações.';
+            cfgError.hidden = false;
+        });
+    }
+
     function setTableLoading(loading) {
         if (loading) {
             tbody.innerHTML = '<tr><td colspan="12" class="admin-loading">Carregando cotas…</td></tr>';
@@ -394,6 +436,7 @@
         adminApp.hidden = false;
         loginError.hidden = true;
         setTableLoading(true);
+        loadRifaConfigAdmin();
         loadData().catch(function (err) {
             if (!document.body.classList.contains('admin-logged-in')) return;
             var msg = (err && err.message) || 'Erro ao carregar dados.';
@@ -661,6 +704,14 @@
     });
     formCota.addEventListener('submit', saveCota);
     fStatus.addEventListener('change', toggleCompradorRequired);
+    if (formRifaConfig) formRifaConfig.addEventListener('submit', saveRifaConfig);
+    if (btnSettingsToggle && adminSettings) {
+        btnSettingsToggle.addEventListener('click', function () {
+            var collapsed = adminSettings.classList.toggle('admin-settings--collapsed');
+            btnSettingsToggle.textContent = collapsed ? 'Mostrar' : 'Ocultar';
+            btnSettingsToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        });
+    }
 
     if (localStorage.getItem('rifa-theme') === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');

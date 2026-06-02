@@ -1,7 +1,11 @@
 (function () {
     'use strict';
 
-    const WHATSAPP_NUMBER = '5531982635834';
+    let rifaConfig = {
+        whatsapp: '5531982635834',
+        premio: 'Caixa de Som JBL',
+        data_sorteio: '30/06/2026'
+    };
     const STORAGE_RESERVAS = 'rifa-minhas-reservas';
     const REFRESH_MS = 15000;
 
@@ -148,7 +152,7 @@
         msg +=
             '🎟️ Números: ' + cotaData.numero1 + ' · ' + cotaData.numero2 + ' · ' + cotaData.numero3 + '\n\n' +
             'Gostaria de enviar o comprovante de pagamento (PIX). Aguardo confirmação!';
-        return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
+        return 'https://wa.me/' + String(rifaConfig.whatsapp || '').replace(/\D/g, '') + '?text=' + encodeURIComponent(msg);
     }
 
     function normalizarIdentificador(value) {
@@ -700,9 +704,28 @@
     }
 
     function initWhatsApp() {
-        whatsappBtn.href =
-            'https://wa.me/' + WHATSAPP_NUMBER +
-            '?text=' + encodeURIComponent('Olá! Gostaria de reservar uma cota da rifa.');
+        if (!whatsappBtn) return;
+        whatsappBtn.href = window.RifaPublic
+            ? RifaPublic.whatsappUrl('Olá! Gostaria de reservar uma cota da rifa.', rifaConfig)
+            : 'https://wa.me/' + String(rifaConfig.whatsapp || '').replace(/\D/g, '') +
+                '?text=' + encodeURIComponent('Olá! Gostaria de reservar uma cota da rifa.');
+    }
+
+    function applyRifaConfig(cfg) {
+        rifaConfig = cfg || rifaConfig;
+        if (window.RifaPublic) RifaPublic.apply(rifaConfig);
+        initWhatsApp();
+    }
+
+    function loadRifaConfig() {
+        if (!window.RifaPublic) {
+            initWhatsApp();
+            return Promise.resolve(rifaConfig);
+        }
+        return RifaPublic.load().then(function (cfg) {
+            applyRifaConfig(cfg);
+            return cfg;
+        });
     }
 
     searchInput.addEventListener('input', resetPageAndRender);
@@ -761,7 +784,8 @@
     });
 
     initTheme();
-    initWhatsApp();
-    loadCotas();
-    refreshTimer = setInterval(function () { loadCotas(true); }, REFRESH_MS);
+    loadRifaConfig().finally(function () {
+        loadCotas();
+        refreshTimer = setInterval(function () { loadCotas(true); }, REFRESH_MS);
+    });
 })();

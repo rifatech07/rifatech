@@ -45,8 +45,68 @@
         };
     }
 
+    var CONFIG_DEFAULTS = {
+        whatsapp: '5531982635834',
+        premio: 'Caixa de Som JBL',
+        data_sorteio: '30/06/2026'
+    };
+
+    function configRow(row) {
+        return {
+            whatsapp: (row && row.whatsapp) || CONFIG_DEFAULTS.whatsapp,
+            premio: (row && row.premio) || CONFIG_DEFAULTS.premio,
+            data_sorteio: (row && row.data_sorteio) || CONFIG_DEFAULTS.data_sorteio
+        };
+    }
+
     global.RifaAPI = {
         getClient: getClient,
+        configDefaults: CONFIG_DEFAULTS,
+
+        fetchRifaConfig: function () {
+            return getClient()
+                .from('rifa_config')
+                .select('whatsapp,premio,data_sorteio')
+                .eq('id', 1)
+                .maybeSingle()
+                .then(function (res) {
+                    if (res.error) throw res.error;
+                    return configRow(res.data);
+                })
+                .catch(function () {
+                    return Object.assign({}, CONFIG_DEFAULTS);
+                });
+        },
+
+        updateRifaConfig: function (payload) {
+            var whatsapp = String(payload.whatsapp || '').replace(/\D/g, '');
+            if (whatsapp.length < 10) {
+                return Promise.resolve({ ok: false, erro: 'WhatsApp inválido. Use DDI + DDD + número.' });
+            }
+            var premio = String(payload.premio || '').trim();
+            var dataSorteio = String(payload.data_sorteio || payload.dataSorteio || '').trim();
+            if (premio.length < 2) {
+                return Promise.resolve({ ok: false, erro: 'Informe o prêmio.' });
+            }
+            if (dataSorteio.length < 4) {
+                return Promise.resolve({ ok: false, erro: 'Informe a data do sorteio.' });
+            }
+            return getClient()
+                .from('rifa_config')
+                .update({
+                    whatsapp: whatsapp,
+                    premio: premio,
+                    data_sorteio: dataSorteio,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', 1)
+                .select('whatsapp,premio,data_sorteio')
+                .single()
+                .then(function (res) {
+                    if (res.error) return { ok: false, erro: res.error.message };
+                    return { ok: true, body: configRow(res.data) };
+                });
+        },
 
         fetchCotasPublic: function () {
             return getClient()

@@ -125,6 +125,51 @@ body:not(.admin-logged-in) #admin-app {
     flex-wrap: wrap;
 }
 
+.admin-settings {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+}
+
+.admin-settings--collapsed .admin-settings__form {
+    display: none;
+}
+
+.admin-settings__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.admin-settings__head h2 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.admin-settings__sub {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+.admin-settings__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.field-hint {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
 .admin-topbar__left {
     display: flex;
     align-items: center;

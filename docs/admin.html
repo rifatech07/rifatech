@@ -69,6 +69,35 @@
             </div>
         </section>
 
+        <section class="admin-settings" id="admin-settings">
+            <div class="admin-settings__head">
+                <div>
+                    <h2>Configurações da rifa</h2>
+                    <p class="admin-settings__sub">WhatsApp, prêmio e data do sorteio (aparecem na página do comprador)</p>
+                </div>
+                <button type="button" id="btn-settings-toggle" class="btn btn--ghost btn--sm" aria-expanded="true">Ocultar</button>
+            </div>
+            <form id="form-rifa-config" class="admin-settings__form">
+                <div class="admin-settings__grid">
+                    <div class="field">
+                        <label for="cfg-whatsapp">WhatsApp para pagamento</label>
+                        <input type="tel" id="cfg-whatsapp" required inputmode="numeric" autocomplete="tel" placeholder="5531982635834">
+                        <span class="field-hint">Somente números: DDI + DDD + celular (ex.: 5531982635834)</span>
+                    </div>
+                    <div class="field">
+                        <label for="cfg-premio">Prêmio / o que está sendo rifado</label>
+                        <input type="text" id="cfg-premio" required maxlength="120" placeholder="Caixa de Som JBL">
+                    </div>
+                    <div class="field">
+                        <label for="cfg-data-sorteio">Data do sorteio</label>
+                        <input type="text" id="cfg-data-sorteio" required maxlength="30" placeholder="30/06/2026">
+                    </div>
+                </div>
+                <p class="form-error" id="cfg-error" hidden></p>
+                <button type="submit" class="btn btn--secondary">Salvar configurações</button>
+            </form>
+        </section>
+
         <section class="admin-toolbar">
             <div class="toolbar__search">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
