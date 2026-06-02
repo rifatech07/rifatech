@@ -247,6 +247,33 @@ a.btn {
     justify-content: center;
 }
 
+.btn-help {
+    gap: 6px;
+    padding: 8px 12px;
+}
+
+.btn-help svg {
+    flex-shrink: 0;
+}
+
+.btn-help__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .btn-help__label {
+        display: none;
+    }
+
+    .btn-help {
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+    }
+}
+
 .icon-moon { display: none; }
 [data-theme="dark"] .icon-sun { display: none; }
 [data-theme="dark"] .icon-moon { display: block; }
@@ -1116,6 +1143,83 @@ body.modal-open {
     width: 100%;
     max-width: 420px;
     animation: modalIn 0.2s ease;
+}
+
+.modal--faq {
+    max-width: 32rem;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal--faq .modal__body {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+.faq-intro {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0 0 14px;
+    line-height: 1.5;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.faq-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    background: var(--bg);
+}
+
+.faq-item summary {
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 12px 4px 12px 0;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary::after {
+    content: '+';
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.faq-item[open] summary::after {
+    content: '−';
+}
+
+.faq-item__body {
+    padding: 0 4px 12px;
+}
+
+.faq-item__body p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+.faq-item__body strong {
+    color: var(--text);
+    font-weight: 600;
 }
 
 @keyframes modalIn {

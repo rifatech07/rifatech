@@ -42,7 +42,6 @@
     const btnSort = document.getElementById('btn-sort');
     const sortLabel = document.getElementById('sort-label');
     const btnTheme = document.getElementById('btn-theme');
-    const btnPdf = document.getElementById('btn-pdf');
     const btnReservar = document.getElementById('btn-reservar');
     const btnRetomar = document.getElementById('btn-retomar');
     const whatsappBtn = document.getElementById('whatsapp-btn');
@@ -675,36 +674,6 @@
         }
     }
 
-    function exportPdf() {
-        var data = getFilteredData();
-        var jsPDF = window.jspdf.jsPDF;
-        var doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-
-        doc.setFontSize(14);
-        doc.text('Rifa Solidária — Consulta de Cotas', 14, 15);
-        doc.setFontSize(9);
-        doc.setTextColor(100);
-        doc.text('Gerado em: ' + new Date().toLocaleString('pt-BR'), 14, 21);
-
-        var rows = data.map(function (item) {
-            return [
-                item.cota, item.numero1, item.numero2, item.numero3,
-                item.identificador || '—', item.status, item.pagamento || '—'
-            ];
-        });
-
-        doc.autoTable({
-            head: [['Cota', 'N°1', 'N°2', 'N°3', 'Identificador', 'Status', 'Pagamento']],
-            body: rows,
-            startY: 26,
-            styles: { fontSize: 8, cellPadding: 2 },
-            headStyles: { fillColor: [30, 41, 59], textColor: 255 },
-            alternateRowStyles: { fillColor: [248, 249, 251] }
-        });
-
-        doc.save('rifa-cotas-' + new Date().toISOString().slice(0, 10) + '.pdf');
-    }
-
     function initWhatsApp() {
         if (!whatsappBtn) return;
         whatsappBtn.href = window.RifaPublic
@@ -755,7 +724,6 @@
         });
     }
     btnTheme.addEventListener('click', toggleTheme);
-    btnPdf.addEventListener('click', exportPdf);
     btnReservar.addEventListener('click', function () { openModal(); });
     btnRetomar.addEventListener('click', function () { openRetomarModal(); });
     retomarClose.addEventListener('click', closeRetomarModal);
@@ -779,6 +747,8 @@
     formReserva.addEventListener('submit', submitReserva);
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
+            var modalHelp = document.getElementById('modal-help');
+            if (modalHelp && !modalHelp.hidden) return;
             if (!modalOverlay.hidden) closeModal();
             if (!modalRetomar.hidden) closeRetomarModal();
             if (!modalSucesso.hidden) closeSucessoModal();

@@ -52,6 +52,14 @@ body:not(.admin-logged-in) #admin-app {
     margin-bottom: 24px;
 }
 
+.login-card .btn-help {
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
 .login-card .btn-back {
     margin-top: 20px;
 }
